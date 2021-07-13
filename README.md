@@ -19,10 +19,12 @@ A simple Discord bot to save and fetch dates, such as birthdays.
 
 #### TO DO:
 - [X] Design the initial structure
-- [ ] Design the different layers
-- [ ] Implement the Data layer
-- [ ] Implement the Logic layer
-- [ ] Implement the Input layer
+- [X] Design the Data layer & its UTs
+- [ ] Design the Logic layer & its UTs
+- [ ] Design the Input layer
 - [ ] Write Data UTs
 - [ ] Write Logic UTs
 - [ ] Write Input UTs
+- [ ] Implement the Data layer
+- [ ] Implement the Logic layer
+- [ ] Implement the Input layer
