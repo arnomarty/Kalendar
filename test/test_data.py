@@ -24,10 +24,10 @@ def test_getdate(dataobj):
     entryfetched = dataobj.getdate(4321)
 
     if entryfetched == None:
-        return "FAILED", "If setdate() is implemented, didn't return anything for a correct entry."
+        return "FAILED", "Didn't return anything for a correct entry - REQUIRES SETDATE()"
 
     if not validentry.equals(entryfetched):
-        return "FAILED", "If setdate() is implemented, didn't return the good entry."
+        return "FAILED", "Didn't return the good entry - REQUIRES SETDATE()"
 
     return "OK", "Successfully passed the test!"
 
@@ -47,7 +47,7 @@ def test_setdate(dataobj):
     except:
         return "FAILED", "Didn't raise correct exception for a wrong parameter."
     else:
-        return "FAILED", "Didn't raise ValueError exception for a wrong parameter (int)."
+        return "FAILED", "Didn't raise ValueError exception for a wrong parameter."
 
     wrongentry1 = Entry(1, 100, 1, 1997, True)
     wrongentry2 = Entry(2, 18, 20, 1997, True)
@@ -71,13 +71,13 @@ def test_setdate(dataobj):
 
     entryfetched = dataobj.getdate(9876)
     if entryfetched == None or not entryfetched.equals(validentry):
-        return "FAILURE", "Either the entry wasn't saved properly, or getdate isn't implemented yet."
+        return "FAILURE", "The entry wasn't saved properly - REQUIRES GETDATE()"
 
     modifiedentry = Entry(9876, 1, 9, 2001)
     dataobj.setdate(modifiedentry)
     entryfetched2 = dataobj.getdate(9876)
     if not modifiedentry.equals(entryfetched2):
-        return "FAILED", "Either the entry wasn't updated properly, or getdate isn't implemented yet."
+        return "FAILED", "The entry wasn't updated properly - REQUIRES GETDATE()"
 
     return "OK", "Successfully passed the test!"
 
@@ -91,10 +91,10 @@ def test_save(dataobj):
 
     entryfetched = dataobj.getdate(1472)
     if entryfetched == None:
-        return "FAILED", "If reload() and getdate() are implemented, the entries weren't saved!"
+        return "FAILED", "The entries weren't saved - REQUIRES RELOAD(), GETDATE()"
 
     if not validentry.equals(entryfetched):
-        return "FAILED", "If reload() and getdate() are implemented, the entries weren't saved properly."
+        return "FAILED", "The entries weren't saved properly - REQUIRES RELOAD(), GETDATE()"
 
     return "OK", "Successfully passed the test!"
 
@@ -110,10 +110,10 @@ def test_reload(dataobj):
 
     entryfetched = dataobj.getdate(1472)
     if entryfetched == None:
-        return "FAILED", "If save() and getdate() are implemented, the entries weren't reloaded!"
+        return "FAILED", "The entries weren't reloaded - REQUIRES SAVE(), GETDATE()"
 
     if not validentry.equals(entryfetched):
-        return "FAILED", "If save() and getdate() are implemented, the entries weren't reloaded properly."
+        return "FAILED", "The entries weren't reloaded properly - REQUIRES SAVE(), GETDATE()"
     return "OK", "Successfully passed the test!"
 
 
