@@ -3,31 +3,166 @@ import os
 # insert at 1, 0 is the script path (or '' in REPL)
 sys.path.insert(1, os.path.abspath('../src'))
 import datalayer as dl
+from entry import *
 
 
 
 def test_getdate(dataobj):
-    return "FAILED", "Not yet implemented"
+    try:
+        dataobj.getdate("Sheesh")
+        dataobj.getdate(-11)
+        dataobj.getdate(0)
+    except ValueError:
+        pass
+    except:
+        return "FAILED", "Didn't raise correct exception when passed a wrong parameter."
+    else:
+        return "FAILED", "Didn't raise ValueError exception for a wrong parameter."
+
+    validentry = Entry(4321, 14, 8, 1997, True)
+    dataobj.setdate(validentry)
+    entryfetched = dataobj.getdate(4321)
+
+    if entryfetched == None:
+        return "FAILED", "If setdate() is implemented, didn't return anything for a correct entry."
+
+    if not validentry.equals(entryfetched):
+        return "FAILED", "If setdate() is implemented, didn't return the good entry."
+
+    return "OK", "Successfully passed the test!"
+
+
+
+def test_getdatebydate(dataobj):
+    return "FAILED", "Not yet implemented!"
+
 
 
 def test_setdate(dataobj):
-    return "FAILED", "Not yet implemented"
+    try:
+        dataobj.setdate(1234)
+        dataobj.setdate("Hello hello")
+    except ValueError:
+        pass
+    except:
+        return "FAILED", "Didn't raise correct exception for a wrong parameter."
+    else:
+        return "FAILED", "Didn't raise ValueError exception for a wrong parameter (int)."
+
+    wrongentry1 = Entry(1, 100, 1, 1997, True)
+    wrongentry2 = Entry(2, 18, 20, 1997, True)
+    wrongentry3 = Entry(3,-1,-2,1997, False)
+    try:
+        dataobj.setdate(wrongentry1)
+        dataobj.setdate(wrongentry2)
+        dataobj.setdate(wrongentry3)
+    except ValueError:
+        pass
+    except:
+        return "FAILED", "Didn't raise correct exception for an invalid Data() parameter."
+    else:
+        return "FAILED", "Didn't raise ValueError exception for an invalid Data() parameter."
+
+    validentry = Entry(9876, 14, 8, 1997, True)
+
+    returnvalue = dataobj.setdate(validentry)
+    if returnvalue == False:
+        return "FAILED", "Didn't return true at the end of the execution."
+
+    entryfetched = dataobj.getdate(9876)
+    if entryfetched == None or not entryfetched.equals(validentry):
+        return "FAILURE", "Either the entry wasn't saved properly, or getdate isn't implemented yet."
+
+    modifiedentry = Entry(9876, 1, 9, 2001)
+    dataobj.setdate(modifiedentry)
+    entryfetched2 = dataobj.getdate(9876)
+    if not modifiedentry.equals(entryfetched2):
+        return "FAILED", "Either the entry wasn't updated properly, or getdate isn't implemented yet."
+
+    return "OK", "Successfully passed the test!"
+
 
 
 def test_save(dataobj):
-    return "FAILED", "Not yet implemented"
+    validentry = Entry(1472, 14, 10, 1998, True)
+    dataobj.setdate(validentry)
+    dataobj.save()
+    dataobj.reload()
+
+    entryfetched = dataobj.getdate(1472)
+    if entryfetched == None:
+        return "FAILED", "If reload() and getdate() are implemented, the entries weren't saved!"
+
+    if not validentry.equals(entryfetched):
+        return "FAILED", "If reload() and getdate() are implemented, the entries weren't saved properly."
+
+    return "OK", "Successfully passed the test!"
+
 
 
 def test_reload(dataobj):
-    return "FAILED", "Not yet implemented"
+    validentry = Entry(1472, 14, 10, 1998, True)
+    dataobj2 = dl.Data('test_rss/')
+    dataobj2.setdate(validentry)
+    dataobj2.save()
+
+    dataobj.reload()
+
+    entryfetched = dataobj.getdate(1472)
+    if entryfetched == None:
+        return "FAILED", "If save() and getdate() are implemented, the entries weren't reloaded!"
+
+    if not validentry.equals(entryfetched):
+        return "FAILED", "If save() and getdate() are implemented, the entries weren't reloaded properly."
+    return "OK", "Successfully passed the test!"
+
 
 
 def test_userexists(dataobj):
-    return "FAILED", "Not yet implemented"
+    validentry = Entry(8521, 12, 2, 1996, False)
+
+    try:
+        dataobj.userexists("Smooch")
+        dataobj.userexists(-1)
+        dataobj.userexists(validentry)
+    except ValueError:
+        pass
+    else:
+        return "FAILED", "Didn't raise ValueError exception when passed wrong-typed parameter."
+
+    if dataobj.userexists(8521):
+        return "FAILED", "Non-existing user deemed as existing."
+
+    dataobj.setdate(validentry)
+    if not dataobj.userexists(8521):
+        return "FAILED", "Existing user deemed as non-existing"
+
+    return "OK", "Successfully passed the test!"
+
 
 
 def test_dateexists(dataobj):
-    return "FAILED", "Not yet implemented"
+    validentry = Entry(1111, 1, 2, 1950, False)
+    try:
+        dataobj.dateexists(50, 1, 2010)
+        dataobj.dateexists(-5, 2, 2020)
+        dataobj.dateexists(10, 120, 2010)
+        dataobj.dateexists(14, -8, 2000)
+        dataobj.dateexists(541, 1024, -111)
+    except ValueError:
+        pass
+    else:
+        return "FAILED", "Didn't raise ValueError exception when passed wrong parameter."
+
+    if dataobj.dateexists(1, 2, 1950):
+        return "FAILED", "Non-existing date deemed as existing."
+
+    dataobj.setdate(validentry)
+    if not dataobj.dateexists(1, 2, 1950):
+        return "FAILED", "Existing date deemed as non-existing"
+
+    return "OK", "Successfully passed the test!"
+
 
 
 
@@ -38,6 +173,11 @@ if __name__ == '__main__':
 
     code, details = test_getdate(dataobj)
     print(" - test_getdate(): " + code + "! (Output: " + details + ")")
+    if code == "OK":
+        testpassed = testpassed + 1
+
+    code, details = test_getdatebydate(dataobj)
+    print(" - test_getdatebydate(): " + code + "! (Output: " + details + ")")
     if code == "OK":
         testpassed = testpassed + 1
 
@@ -66,5 +206,5 @@ if __name__ == '__main__':
     if code == "OK":
         testpassed = testpassed + 1
 
-    percentage = int(testpassed/6*100)
-    print("\n--------\nAmount of tests passed: " + str(testpassed) + "/6 (" + str(percentage) + "%)\n")
+    percentage = int(testpassed/7*100)
+    print("\n--------\nAmount of tests passed: " + str(testpassed) + "/7 (" + str(percentage) + "%)\n")
