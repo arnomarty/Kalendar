@@ -34,6 +34,6 @@ A simple Discord bot to save and fetch dates, such as birthdays.
 
 --------
 
-### Suggestions & Improvements:
-- ( 🔴 SUGGESTION ) Grant the possibility to set a date that isn't a birthday
-- ( 🔵 IMPROVEMENT ) Set up a server/channel bind table in the Data Layer 
+### Suggestions (🔴) and Improvements (🔵):
+- 🔴 Grant the possibility to set a date that isn't a birthday
+- 🔵 Set up a server/channel bind table in the Data Layer 

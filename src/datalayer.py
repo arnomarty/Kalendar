@@ -6,15 +6,19 @@ class Data:
 
     def __init__(self, rsspath):
         self.database = dict()
-        self.path = os.path.abspath(rsspath)
+        self.bindtable = dict()
 
+        self.path = os.path.abspath(rsspath)
         if not os.path.isdir(self.path):
             os.mkdir(self.path)
 
+        self.tablepath = self.path + '/bindtable.csv'
         self.path = self.path + '/dates.csv'
 
         if not os.path.isfile(self.path):
             open(self.path, 'x')
+        if not os.path.isfile(self.tablepath):
+            open(self.tablepath, 'x')
 
 
 
@@ -67,6 +71,7 @@ class Data:
         return None
 
 
+
     # Creates a new birthday entry into the existing database. Raises a ValueError
     # exception if the parameter doesn't meet the requirements listed below.
     # Parameters :
@@ -95,6 +100,7 @@ class Data:
         return True
 
 
+
     # Saves the current database in a "dates.csv" file, located in a folder whose
     # path is stored inside the self.path attribute. If it doesn't exist,
     # the function creates it.
@@ -114,6 +120,7 @@ class Data:
             return False
 
         return True
+
 
 
     # Updates the current database based on a "dates.csv" file, located into a
@@ -140,6 +147,7 @@ class Data:
         return True
 
 
+
     # Will browse through the database to see if any entry matches with the ID
     # passed as a parameter. Raises a ValueError exception if the parameter
     # doesn't meet the requirements listed below.
@@ -155,6 +163,7 @@ class Data:
             raise ValueError("Invalid ID parameter: " + str(id) )
 
         return id in self.database.keys()
+
 
 
     # Will browse through the database to see if any entry matches with the date
@@ -183,3 +192,38 @@ class Data:
                 return True
 
         return False
+
+
+
+    # Will load the server/channel binding table located in a CSV file whose
+    # path is stored in the 'tablepath' attribute. That file MUST exist for
+    # the function to run. If it doesn't, raises a FileNotFoundError exception.
+    # Parameters :
+    #   None
+    # Returns :
+    #   - True if the table was successfully loaded, False otherwise.
+    def loadbindtable(self):
+        return False
+
+
+
+    # Saves the current server/channel binding table into a CSV file which can
+    # be found in the directory pointed by the 'tablepath' attribute.
+    # Parameters :
+    #   None
+    # Returns :
+    #   - True if the table was successfully saved, False otherwise.
+    def savebindtable(self):
+        return False
+
+
+
+    # Will look into the bindtable attribute for a matching server ID. If the
+    # parameters don't meet the requirements listed below, raises a ValueError
+    # exception.
+    # Parameters :
+    #   - serverid: Integer. serverid > 0
+    # Returns :
+    #   - If march found, the channel ID associated. -1 otherwise.
+    def getboundchannel(self, serverid):
+        return -1
