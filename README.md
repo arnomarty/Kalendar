@@ -17,14 +17,17 @@ A simple Discord bot to save and fetch dates, such as birthdays.
 
 ---
 
-#### TO DO:
+#### TO-DO LIST
 - [X] Design the initial structure
+###### Design:
 - [X] Design the Data layer & its UTs
 - [ ] Design the Logic layer & its UTs
 - [ ] Design the Input layer
+###### Unit Tests:
 - [X] Write Data UTs
 - [ ] Write Logic UTs
 - [ ] Write Input UTs
+###### Implementation:
 - [ ] Implement the Data layer
 - [ ] Implement the Logic layer
 - [ ] Implement the Input layer
