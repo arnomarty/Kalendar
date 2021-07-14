@@ -23,6 +23,9 @@ class Entry:
         resultstring = resultstring + "Is it a birthday: " + str(self.is_birthday) + "\n"
         return resultstring
 
+    def tocsvformat(self):
+        return [ self.id, self.day, self.month, self.year, int(self.is_birthday)]
+
 
     def equals(self, obj):
         if not isinstance(obj, Entry):

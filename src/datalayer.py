@@ -1,7 +1,21 @@
+import os
+import csv
+from entry import *
+
 class Data:
 
     def __init__(self, rsspath):
-        print("WARNING: Data constructor not yet implemented!")
+        self.database = dict()
+        self.path = os.path.abspath(rsspath)
+
+        if not os.path.isdir(self.path):
+            os.mkdir(self.path)
+
+        self.path = self.path + '/dates.csv'
+
+        if not os.path.isfile(self.path):
+            open(self.path, 'x')
+
 
 
     # Roams trough the existing dates database and fetches the birthday date
@@ -13,6 +27,14 @@ class Data:
     #   - An Entry() object if the ID is in the database. None otherwise.
     #
     def getdate(self, id):
+        if not isinstance(id, int):
+            raise ValueError("Parameter 'id' must be an integer")
+        if id < 1:
+            raise ValueError("Invalid ID parameter: " + str(id))
+
+        if id in self.database:
+            return self.database[id]
+
         return None
 
 
@@ -28,6 +50,20 @@ class Data:
     #   - An Entry() object if the date is in the database. None otherwise.
     #
     def getdatebydate(self, day, month, year):
+        if not isinstance(day, int) or not isinstance(month, int) or not isinstance(year, int):
+            raise ValueError("All parameters must be integers")
+        if day < 1 or day > 31:
+            raise ValueError("Invalid 'day' parameter: " + str(day))
+        if month < 1 or month > 12:
+            raise ValueError("Invalid 'month' parameter: " + str(month))
+        if year < 1900:
+            raise ValueError("Invalid 'year' parameter: " + str(year))
+
+        for entry in self.database.values():
+            d, m, y = entry.getdate()
+            if d == day and m == month and y == year:
+                return entry
+
         return None
 
 
@@ -40,7 +76,23 @@ class Data:
     #   - True if the value was properly saved, False otherwise.
     #
     def setdate(self, entry):
-        return False
+        if not isinstance(entry, Entry):
+            raise ValueError("Parameter 'entry' must be an Entry() object")
+        d, m, y = entry.getdate()
+        if d < 1 or d > 31:
+            raise ValueError("Invalid day attribute: " + str(d))
+        if m < 1 or m > 12:
+            raise ValueError("Invalid month attribute: " + str(m))
+        if y < 1900:
+            raise ValueError("Invalid year attribute: " + str(y))
+
+        id = entry.getid()
+        try:
+            self.database[id] = Entry(id, d, m, y, entry.isbirthday())
+        except:
+            return False
+
+        return True
 
 
     # Saves the current database in a "dates.csv" file, located in a folder whose
@@ -52,17 +104,40 @@ class Data:
     #   - True if the database was properly saved, False otherwise.
     #
     def save(self):
-        return False
+
+        try:
+            with open(self.path, 'w') as csvfile:
+                csvwriter = csv.writer(csvfile)
+                for entry in self.database.values():
+                    csvwriter.writerow(entry.tocsvformat())
+        except:
+            return False
+
+        return True
 
 
     # Updates the current database based on a "dates.csv" file, located into a
-    # folder whose path is stored into the self.path attribute. That file MUST
-    # exist in order for the database to be updated.
+    # folder whose path is stored into the self.path attribute. Raises a
+    # FileNotFoundError exception if that file doesn't exist.
     # Returns :
     #   - True if the database was properly updated, False otherwise.
     #
     def reload(self):
-        return False
+        if not os.path.isfile(self.path):
+            raise FileNotFoundError
+
+        self.database = dict()
+        try:
+            with open(self.path, 'r') as csvfile:
+                csvreader = csv.reader(csvfile)
+                for row in csvreader:
+                    entry = Entry(int(row[0]), int(row[1]), int(row[2]), int(row[3]), bool(row[4]))
+                    self.database[ int(row[0]) ] = entry
+        except Exception as e:
+            print("Warning: " + e.args)
+            return False
+
+        return True
 
 
     # Will browse through the database to see if any entry matches with the ID
@@ -74,7 +149,13 @@ class Data:
     #   - True if the user exists in the database, False otherwise.
     #
     def userexists(self, id):
-        return False
+        if not isinstance(id, int):
+            raise ValueError("Parameter 'id' must be an integer")
+        if id < 1:
+            raise ValueError("Invalid ID parameter: " + str(id) )
+
+        return id in self.database.keys()
+
 
     # Will browse through the database to see if any entry matches with the date
     # passed in parameters. Raises a ValueError exception if the parameter doesn't
@@ -87,4 +168,18 @@ class Data:
     #   - True if the date exists in the database, False otherwise.
     #
     def dateexists(self, day, month, year):
+        if not isinstance(day, int) or not isinstance(month, int) or not isinstance(year, int):
+            raise ValueError("All parameters must be integers")
+        if day < 1 or day > 31:
+            raise ValueError("Invalid 'day' parameter: " + str(day))
+        if month < 1 or month > 12:
+            raise ValueError("Invalid 'month' parameter: " + str(month))
+        if year < 1900:
+            raise ValueError("Invalid 'year' parameter: " + str(year))
+
+        for entry in self.database.values():
+            d, m, y = entry.getdate()
+            if d == day and m == month and y == year:
+                return True
+
         return False

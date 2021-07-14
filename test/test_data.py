@@ -14,8 +14,6 @@ def test_getdate(dataobj):
         dataobj.getdate(0)
     except ValueError:
         pass
-    except:
-        return "FAILED", "Didn't raise correct exception when passed a wrong parameter."
     else:
         return "FAILED", "Didn't raise ValueError exception for a wrong parameter."
 
@@ -34,7 +32,26 @@ def test_getdate(dataobj):
 
 
 def test_getdatebydate(dataobj):
-    return "FAILED", "Not yet implemented!"
+    try:
+        dataobj.getdatebydate("hihi", "haha", "huhu")
+        dataobj.getdatebydate(100, 1, 2000)
+        dataobj.getdatebydate(1, 100, 2000)
+        dataobj.getdatebydate(1, 1, 1000)
+        dataobj.getdatebydate(-1,-1,-1)
+    except ValueError:
+        pass
+    else:
+        return "FAILED", "Didn't raise ValueError exception for a wrong parameter."
+
+
+    return "OK", "Successfully passed the test!"
+    validentry = Entry(4444, 12, 12, 2020, False)
+    dataobj.setdate(validentry)
+    entryfetched = getdatebydate(12, 12, 2020)
+    if entryfetched == None:
+        return "FAILED", "Didn't return anything when fetching a correct entry - REQUIRES SETDATE()"
+    if not validentry.equals(entryfetched):
+        return "FAILED", "Didn't return the good entry - REQUIRES SETDATE()"
 
 
 
@@ -59,9 +76,9 @@ def test_setdate(dataobj):
     except ValueError:
         pass
     except:
-        return "FAILED", "Didn't raise correct exception for an invalid Data() parameter."
+        return "FAILED", "Didn't raise correct exception for an invalid Entry() parameter."
     else:
-        return "FAILED", "Didn't raise ValueError exception for an invalid Data() parameter."
+        return "FAILED", "Didn't raise ValueError exception for an invalid Entry() parameter."
 
     validentry = Entry(9876, 14, 8, 1997, True)
 
@@ -73,7 +90,7 @@ def test_setdate(dataobj):
     if entryfetched == None or not entryfetched.equals(validentry):
         return "FAILURE", "The entry wasn't saved properly - REQUIRES GETDATE()"
 
-    modifiedentry = Entry(9876, 1, 9, 2001)
+    modifiedentry = Entry(9876, 1, 9, 2001, True)
     dataobj.setdate(modifiedentry)
     entryfetched2 = dataobj.getdate(9876)
     if not modifiedentry.equals(entryfetched2):
@@ -87,9 +104,11 @@ def test_save(dataobj):
     validentry = Entry(1472, 14, 10, 1998, True)
     dataobj.setdate(validentry)
     dataobj.save()
-    dataobj.reload()
 
-    entryfetched = dataobj.getdate(1472)
+    dataobj2 = dl.Data('test_rss/')
+    dataobj2.reload()
+
+    entryfetched = dataobj2.getdate(1472)
     if entryfetched == None:
         return "FAILED", "The entries weren't saved - REQUIRES RELOAD(), GETDATE()"
 
@@ -102,13 +121,13 @@ def test_save(dataobj):
 
 def test_reload(dataobj):
     validentry = Entry(1472, 14, 10, 1998, True)
+    dataobj.setdate(validentry)
+    dataobj.save()
+
     dataobj2 = dl.Data('test_rss/')
-    dataobj2.setdate(validentry)
-    dataobj2.save()
+    dataobj2.reload()
 
-    dataobj.reload()
-
-    entryfetched = dataobj.getdate(1472)
+    entryfetched = dataobj2.getdate(1472)
     if entryfetched == None:
         return "FAILED", "The entries weren't reloaded - REQUIRES SAVE(), GETDATE()"
 

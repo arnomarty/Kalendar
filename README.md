@@ -28,6 +28,6 @@ A simple Discord bot to save and fetch dates, such as birthdays.
 - [ ] Write Logic UTs
 - [ ] Write Input UTs
 ###### Implementation:
-- [ ] Implement the Data layer
+- [X] Implement the Data layer
 - [ ] Implement the Logic layer
 - [ ] Implement the Input layer
