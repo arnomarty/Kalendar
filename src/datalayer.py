@@ -2,6 +2,27 @@ import os
 import csv
 from entry import *
 
+"""
+CLASS OVERVIEW :
+    Arguments:
+        - database (Stores the user IDs with their birthdates)
+        - bindtable (Stores the Server/Channel couples)
+    Methods:
+        -  [line 28] CONSTRUCTOR(rsspath: str)
+        -  [line 54] getdate(id: int)
+        -  [line 77] getdatebydate(day: int, month: int, year: int)
+        - [line 104] setdate(entry: Entry)
+        - [line 133] save(void)
+        - [line 152] reload(void)
+        - [line 179] userexists(id: int)
+        - [line 199] dateexists(day: int, month: int, year: int)
+        - [line 226] loadbindtable(void)
+        - [line 253] savebindtable(void)
+        - [line 276] getboundchannel(serverid: int)
+        - [line 297] addboundchannel(serverid: int, channelid: int)
+"""
+
+
 class Data:
 
     def __init__(self, rsspath):
