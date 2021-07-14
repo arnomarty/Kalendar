@@ -110,7 +110,6 @@ class Data:
     #   - True if the database was properly saved, False otherwise.
     #
     def save(self):
-
         try:
             with open(self.path, 'w') as csvfile:
                 csvwriter = csv.writer(csvfile)
@@ -131,7 +130,7 @@ class Data:
     #
     def reload(self):
         if not os.path.isfile(self.path):
-            raise FileNotFoundError
+            raise FileNotFoundError("Error: File " + self.path + " doesn't exist!")
 
         self.database = dict()
         try:
@@ -202,8 +201,24 @@ class Data:
     #   None
     # Returns :
     #   - True if the table was successfully loaded, False otherwise.
+    #
     def loadbindtable(self):
-        return False
+        if not os.path.isfile(self.tablepath):
+            raise FileNotFoundError("Error: File " + self.tablepath + " doesn't exist!")
+
+        self.bindtable = dict()
+        try:
+            with open(self.tablepath, 'r') as csvfile:
+                csvreader = csv.reader(csvfile)
+                for row in csvreader:
+                    if len(row) != 2:
+                        raise ValueError("Bind table corrupted!")
+                    self.bindtable[ int(row[0]) ] = int(row[1])
+        except Exception as e:
+            print("Warning: " + e.args)
+            return False
+
+        return True
 
 
 
@@ -213,8 +228,19 @@ class Data:
     #   None
     # Returns :
     #   - True if the table was successfully saved, False otherwise.
+    #
     def savebindtable(self):
-        return False
+        if len(self.bindtable) == 0:
+            return False
+        try:
+            with open(self.tablepath, 'w') as csvfile:
+                csvwriter = csv.writer(csvfile)
+                for serverid in self.bindtable.keys():
+                    csvwriter.writerow([serverid, self.bindtable[serverid]])
+        except:
+            return False
+
+        return True
 
 
 
@@ -225,5 +251,33 @@ class Data:
     #   - serverid: Integer. serverid > 0
     # Returns :
     #   - If march found, the channel ID associated. -1 otherwise.
+    #
     def getboundchannel(self, serverid):
+        if not isinstance(serverid, int):
+            raise ValueError("Parameter 'serverid' must be an integer!")
+        if serverid <= 0:
+            raise ValueError("Invalid value for parameter 'serverid': " + str(serverid))
+
+        if serverid in self.bindtable.keys():
+            return self.bindtable[serverid]
         return -1
+
+
+
+    # Will add a server/channel couple into the bindtable. On the given server,
+    # birthday messages will be written on the given channel. Raises a ValueError
+    # exception if the parameters don't meet the requirements listed below.
+    # Parameters :
+    #   - serverid: Integer. serverid < 0
+    #   - channelid: Integer. channelid < 0
+    # Returns :
+    #   - True if the operation was a success, False otherwise.
+    #
+    def addboundchannel(self, serverid, channelid):
+        if not isinstance(serverid, int) or not isinstance(channelid, int):
+            raise ValueError("All parameters must be integers!")
+        if serverid <= 0 or channelid <= 0:
+            raise ValueError("All parameters must be positive!")
+
+        self.bindtable[serverid] = channelid
+        return True

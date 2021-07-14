@@ -184,6 +184,23 @@ def test_dateexists(dataobj):
 
 
 
+def test_bindtablefunctions(dataobj):
+    dataobj.addboundchannel(1111, 2222)
+    dataobj.savebindtable()
+    dataobj2 = dl.Data('test_rss/')
+    dataobj2.loadbindtable()
+    result = dataobj2.getboundchannel(1111)
+    if result != 2222:
+        return "FAILED", "Didn't add the correct value!"
+    return "OK", "Successfully passed the test!"
+
+
+
+def test_savebindtable(dataobj):
+    return "FAILED", "Not yet implemented!"
+
+def test_getboundchannel(dataobj):
+    return "FAILED", "Not yet implemented!"
 
 
 if __name__ == '__main__':
@@ -226,5 +243,10 @@ if __name__ == '__main__':
     if code == "OK":
         testpassed = testpassed + 1
 
-    percentage = int(testpassed/7*100)
-    print("\n--------\nAmount of tests passed: " + str(testpassed) + "/7 (" + str(percentage) + "%)\n")
+    code, details = test_bindtablefunctions(dataobj)
+    print(" - Bindtable functions: " + code + "! (Output: " + details + ")")
+    if code == "OK":
+        testpassed = testpassed + 1
+
+    percentage = int(testpassed/8*100)
+    print("\n--------\nAmount of tests passed: " + str(testpassed) + "/8 (" + str(percentage) + "%)\n")
