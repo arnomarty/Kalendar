@@ -6,6 +6,7 @@ A simple Discord bot to save and fetch dates, such as birthdays.
 #### Requirements
 - Python 3
 - Python's Discord API. Use `pip install -U discord.py` to install.
+- DotEnv library. Use `pip install python-dotenv` to install
 
 ---
 
@@ -36,4 +37,4 @@ A simple Discord bot to save and fetch dates, such as birthdays.
 
 ### Suggestions (🔴) and Improvements (🔵):
 - 🔴 Grant the possibility to set a date that isn't a birthday
-- 🔵 Set up a server/channel bind table in the Data Layer 
+- 🔵 Set up a server/channel bind table in the Data Layer
