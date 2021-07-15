@@ -1,22 +1,22 @@
 
 
 
-def test_bindto():
+def test_bindto(dataobj):
     return "FAILED", "Not yet implemented!"
 
-def test_getuserservers():
+def test_getuserservers(dataobj):
     return "FAILED", "Not yet implemented!"
 
-def test_setbirthday():
+def test_setbirthday(dataobj):
     return "FAILED", "Not yet implemented!"
 
-def test_getbybirthdate():
+def test_getbybirthdate(dataobj):
     return "FAILED", "Not yet implemented!"
 
-def test_getbyid():
+def test_getbyid(dataobj):
     return "FAILED", "Not yet implemented!"
 
-def test_geteventsoftheday():
+def test_geteventsoftheday(dataobj):
     return "FAILED", "Not yet implemented!"
 
 

@@ -30,6 +30,6 @@ class Entry:
     def equals(self, obj):
         if not isinstance(obj, Entry):
             return False
-        d, m, y = obj.getdate()
 
+        d, m, y = obj.getdate()
         return self.id == obj.getid() and self.day == d and self.month == m and self.year == y and self.is_birthday == obj.isbirthday()

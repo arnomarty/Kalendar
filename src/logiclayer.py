@@ -13,6 +13,7 @@ import discord as dc
 #   - True if the binding was successful, False otherwise.
 #
 def bindto(channel, server):
+    print('{0.id} <--> {1.id}'.format(channel, server))
     return False
 
 
