@@ -40,6 +40,7 @@ class Data:
             open(self.path, 'x')
         if not os.path.isfile(self.tablepath):
             open(self.tablepath, 'x')
+        self.reload()
 
 
 
@@ -74,7 +75,7 @@ class Data:
     # Returns :
     #   - An Entry() object if the date is in the database. None otherwise.
     #
-    def getdatebydate(self, day, month, year):
+    def getdatebydate(self, day, month, year=2050):
         if not isinstance(day, int) or not isinstance(month, int) or not isinstance(year, int):
             raise ValueError("All parameters must be integers")
         if day < 1 or day > 31:
@@ -86,7 +87,9 @@ class Data:
 
         for entry in self.database.values():
             d, m, y = entry.getdate()
-            if d == day and m == month and y == year:
+            print("Entry res:" + str(int(d) == day and int(m) == month))
+
+            if int(d) == day and int(m) == month:
                 return entry
 
         return None
@@ -112,7 +115,6 @@ class Data:
         if y < 1900:
             raise ValueError("Invalid year attribute: " + str(y))
 
-        id = entry.getid()
         try:
             self.database[id] = Entry(id, d, m, y, entry.isbirthday())
         except:

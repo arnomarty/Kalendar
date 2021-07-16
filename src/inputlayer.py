@@ -25,10 +25,13 @@ async def on_message(message):
     if message.content.lower() == '%bind' and message.author.guild_permissions.administrator:
         ll.bindto(message.channel, message.guild)
         await message.channel.send('Event messages are now bound to the {0.channel.mention} channel!'.format(message))
-        #await message.channel.send('{0.author.mention} I got access to this channel!'.format(message))
+
+    if message.content.lower() == '%channelbound' and message.author.guild_permissions.administrator:
+        await message.channel.send('I am bound to the {0.mention} channel!'.format(ll.serverbinding(message.guild)))
 
     if len(message.mentions) > 0 and message.mentions[0] == client.user:
         await message.channel.send("Stfu")
+        print('{0.author} : {1.id}'.format(message, message.author))
 
 
 client.run(TOKEN)

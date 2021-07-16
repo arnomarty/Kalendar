@@ -1,6 +1,8 @@
 import discord as dc
+import datalayer as dl
+from entry import Entry
 
-
+databox = dl.Data('rss')
 
 # When the channel and the server ID are valid, this function saves and stores
 # the channel in which the bot is supposed to send the birthday reminders.
@@ -14,7 +16,20 @@ import discord as dc
 #
 def bindto(channel, server):
     print('{0.id} <--> {1.id}'.format(channel, server))
-    return False
+    databox.addboundchannel(server.id, channel.id)
+    databox.savebindtable()
+    return True
+
+
+# Returns the channel to which the bot is bound in a specific server (i.e. a
+# channel where the %bind channel has been used at least once)
+# Parameters :
+#   - server: Guild() object. Must point to a valid Discord server.
+# Returns :
+#   - The Channel() object associated, None if it doesn't exist in memory.
+#
+def serverbinding(server):
+    return server.get_channel(databox.getboundchannel(server.id))
 
 
 # Will browse the list of registered servers (i.e. servers in which the /bind
@@ -40,6 +55,7 @@ def getuserservers(user):
 #   - True if the date was successfuly stored, False otherwise.
 #
 def setbirthday(user, day, month, year):
+
     return False
 
 
@@ -76,7 +92,17 @@ def getbyid(user):
 #   - day: Integer. 0 < day < 32
 #   - month: Integer. 0 < month < 13
 # Returns :
-#   - A list of Entry() objects if successful, an empty list otherwise.
+#   - A User() object if successful, None otherwise.
 #
-def geteventsoftheday(day, month):
-    return []
+async def geteventsoftheday(client, day, month):
+    if day < 1 or day > 31:
+        return None
+    if month < 1 or month > 12:
+        return None
+
+    entry = databox.getdatebydate(day, month)
+    if entry != None:
+        u = await client.fetch_user(entry.getid())
+        return u
+
+    return None
