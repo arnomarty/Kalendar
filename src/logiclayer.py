@@ -32,16 +32,18 @@ def serverbinding(server):
     return server.get_channel(databox.getboundchannel(server.id))
 
 
-# Will browse the list of registered servers (i.e. servers in which the /bind
-# command was used at least once) and returns their IDs. If the parameter does
-# not meet the requirements listed below, does nothing.
+# Will browse the list of registered servers and returns a list of those in which a user
+# is present in. If the parameter does not meet the requirements listed below, does nothing.
 # Parameters :
 #   - user: User() object. Must point to a valid Discord user.
+#   - serverlist: List[Guild()]. The list of servers the bot is present in.
 # Returns :
-#   - The list of server IDs where the user is present. Otherwise, returns [].
-def getuserservers(user):
+#   - The list of Server objects where the user is present. Otherwise, returns [].
+def getuserservers(user, serverlist):
+    # Hints:
+    # - Look the discord.py documentation, more specificly, for the Guild()
+    #   and User() objects documentation.
     return []
-
 
 # If the user and the date are both valid, saves and stores the user ID and its
 # associated birthday. Otherwise, does nothing if the date doesn't meet the
