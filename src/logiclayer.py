@@ -38,12 +38,13 @@ def serverbinding(server):
 #   - user: User() object. Must point to a valid Discord user.
 #   - serverlist: List[Guild()]. The list of servers the bot is present in.
 # Returns :
-#   - The list of Server objects where the user is present. Otherwise, returns [].
+#   - List[Guild()] where the user is present. Otherwise, returns [].
 def getuserservers(user, serverlist):
     # Hints:
     # - Look the discord.py documentation, more specificly, for the Guild()
     #   and User() objects documentation.
     return []
+
 
 # If the user and the date are both valid, saves and stores the user ID and its
 # associated birthday. Otherwise, does nothing if the date doesn't meet the
@@ -57,7 +58,11 @@ def getuserservers(user, serverlist):
 #   - True if the date was successfuly stored, False otherwise.
 #
 def setbirthday(user, day, month, year):
-
+    # Hints:
+    # - Make sure to verify the parameters. You can look at already made
+    #   functions to get examples
+    # - Look at entry.py and datalayer.py. More specificly, the setdate()
+    #   function should be handy
     return False
 
 
