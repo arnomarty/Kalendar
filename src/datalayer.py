@@ -41,6 +41,8 @@ class Data:
         if not os.path.isfile(self.tablepath):
             open(self.tablepath, 'x')
         self.reload()
+        self.loadbindtable()
+        print(self.bindtable)
 
 
 
@@ -87,7 +89,6 @@ class Data:
 
         for entry in self.database.values():
             d, m, y = entry.getdate()
-            print("Entry res:" + str(int(d) == day and int(m) == month))
 
             if int(d) == day and int(m) == month:
                 return entry
@@ -116,7 +117,7 @@ class Data:
             raise ValueError("Invalid year attribute: " + str(y))
 
         try:
-            self.database[id] = Entry(id, d, m, y, entry.isbirthday())
+            self.database[entry.getid()] = Entry(entry.getid(), d, m, y, entry.isbirthday())
         except:
             return False
 

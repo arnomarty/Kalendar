@@ -2,7 +2,7 @@ import discord as dc
 import datalayer as dl
 from entry import Entry
 
-databox = dl.Data('rss')
+databox = dl.Data('../rss')
 
 # When the channel and the server ID are valid, this function saves and stores
 # the channel in which the bot is supposed to send the birthday reminders.
@@ -40,10 +40,11 @@ def serverbinding(server):
 # Returns :
 #   - List[Guild()] where the user is present. Otherwise, returns [].
 def getuserservers(user, serverlist):
-    # Hints:
-    # - Look the discord.py documentation, more specificly, for the Guild()
-    #   and User() objects documentation.
-    return []
+    result = []
+    for guild in serverlist:
+        if user in guild.members:
+            result.append(guild)
+    return result
 
 
 # If the user and the date are both valid, saves and stores the user ID and its
@@ -58,12 +59,16 @@ def getuserservers(user, serverlist):
 #   - True if the date was successfuly stored, False otherwise.
 #
 def setbirthday(user, day, month, year):
-    # Hints:
-    # - Make sure to verify the parameters. You can look at already made
-    #   functions to get examples
-    # - Look at entry.py and datalayer.py. More specificly, the setdate()
-    #   function should be handy
-    return False
+    id = user.id
+    e = Entry(id, int(day), int(month), int(year), True)
+    try:
+        databox.setdate(e)
+        databox.save()
+    except ValueError:
+        return False
+
+    print(e.tostring())
+    return True
 
 
 # Tries to fetch a user ID and its associated birthday from a valid date
@@ -101,7 +106,7 @@ def getbyid(user):
 # Returns :
 #   - A User() object if successful, None otherwise.
 #
-async def geteventsoftheday(client, day, month):
+def geteventsoftheday(client, day, month):
     if day < 1 or day > 31:
         return None
     if month < 1 or month > 12:
@@ -109,7 +114,7 @@ async def geteventsoftheday(client, day, month):
 
     entry = databox.getdatebydate(day, month)
     if entry != None:
-        u = await client.fetch_user(entry.getid())
+        u = client.get_user(entry.getid())
         return u
 
     return None
