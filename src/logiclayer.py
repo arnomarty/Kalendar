@@ -1,6 +1,8 @@
 import discord as dc
 import datalayer as dl
 from entry import Entry
+from datetime import datetime
+
 
 databox = dl.Data('../rss')
 
@@ -71,32 +73,6 @@ def setbirthday(user, day, month, year):
     return True
 
 
-# Tries to fetch a user ID and its associated birthday from a valid date
-# passed in parameters. If the date doesn't meet the requirements listed below,
-# does nothing.
-# Parameters :
-#   - day: Integer. 0 < day < 32
-#   - month: Integer. 0 < month < 13
-#   - year: Integer. year <= 1950
-# Returns :
-#   - A corresponding Entry() object if a birthdate was found, None otherwise.
-#
-def getbybirthdate(day, month, year):
-    return None
-
-
-# Performs a similar action than the function above. However, this time, the
-# research criteria is the ID of the user passed in parameters. Here as well,
-# if the parameters doesn't meet the requirements listed below, does nothing.
-# Parameters :
-#   - user: User() discord object. Must point to a valid user.
-# Returns :
-#   - A corresponding Entry() object if a birthdate was found, None otherwise.
-#
-def getbyid(user):
-    return None
-
-
 # Verifies if there is any birthday set on the date passed in parameters. If the
 # date is invalid, i.e. if it doesn't meet the requirements listed below, does
 # nothing.
@@ -118,3 +94,53 @@ def geteventsoftheday(client, day, month):
         return u
 
     return None
+
+
+async def helpprompt(channel):
+    await channel.send("**Common commands list:** \n \
+  - **%kal set {xx/yy} {EU/US}:** \
+Sets xx/yy as your birthdate. You need to specify the time format.\n \
+  - **%kal set {xx/yy/zzzz} {EU/US}:** \
+Sets xx/yy/zzzz as your birthdate. You also need to specify the time format.\n \
+  - **%kal fetch @user:** Fetches an user's birthday.\n\n \
+**Admin commands list:** \n \
+  - **%bind:** To be used in the channel the bot must send birthday reminders to.")
+
+
+def smallbrain(date):
+    if len(date) != 3 and len(date) != 2:
+        return True
+    for i in date:
+        if not i.isdigit():
+            return True
+    if len(date) != 2 and int(date[2]) > datetime.now().year - 4:
+        return True
+    return False
+
+
+
+def handleaddition(message):
+    cmd = message.content.lower().split()
+    if len(cmd) != 4 or cmd[3] not in ['eu', 'us']:
+        return False
+    separator = '/'
+    for c in cmd[2]:
+        if not c.isdigit():
+            separator = c
+            break
+
+    date = cmd[2].split(separator)
+
+    if smallbrain(date):
+        return False
+
+    if len(date) == 2:
+        y = 6969
+    else:
+        y = date[2]
+    if cmd[3] == 'eu':
+        d, m = int(date[0]), int(date[1])
+    else:
+        d, m = int(date[1]), int(date[0])
+
+    return setbirthday(message.author, d, m, y)
