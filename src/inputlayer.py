@@ -1,18 +1,19 @@
 import discord
-import logiclayer as ll
+from discord.ext import tasks, commands
 from dotenv import load_dotenv
-import os
+import logiclayer as ll
 import datetime as dt
+import os
 import schedule
 import threading
-from discord.ext import tasks, commands
 
 
 load_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN')
+
 intents = discord.Intents.default()
 intents.members = True
 client = discord.Client(intents=intents)
-TOKEN = os.getenv('DISCORD_TOKEN')
 
 
 @tasks.loop(hours=24)
@@ -41,33 +42,45 @@ async def on_ready():
 @client.event
 async def on_message(message):
 
+    # To avoid message analysis recursion.
     if message.author == client.user:
         return
 
+    # '%kal fetch @user' command. Sends a user's birth date. (TO BE IMPLEMENTED)
     if message.content.lower().startswith('%kal fetch'):
         await message.channel.send('no lmao')
 
+    # '%kal help' command. Sends back the commands list.
     if message.content.lower() == '%kal help':
         await ll.helpprompt(message.channel)
 
+    # '%kal set xx/yy(/zzzz) {EU/US}' command. Registers xx/yy(/zzzz) as the author's birth date.
     if message.content.lower().startswith('%kal set'):
         if ll.handleaddition(message):
             await message.channel.send('{0.mention} Birthdate successfully registered!'.format(message.author))
         else:
             await message.channel.send('Wrong command syntax! Type %help or mention the bot for more informations')
 
+    # Action to perform when the bot is mentionned.
     if len(message.mentions) == 1 and message.mentions[0] == client.user:
         await message.channel.send("Stfu, if ure lost just type '%kal help' u donkey")
         print('{0.author} : {1.id}'.format(message, message.author))
 
 
+    # Server administrators' commands:
     if isinstance(message.author, discord.Member) and message.author.guild_permissions.administrator:
-        if message.content.lower() == '%bind' and message.author.guild_permissions.administrator:
+        # '%bind' command. The channel in which it was posted will be saved for upcoming event messages.
+        if message.content.lower() == '%bind':
             ll.bindto(message.channel, message.guild)
             await message.channel.send('Event messages are now bound to the {0.channel.mention} channel!'.format(message))
 
-        if message.content.lower() == '%channelbound' and message.author.guild_permissions.administrator:
-            await message.channel.send('I am bound to the {0.mention} channel!'.format(ll.serverbinding(message.guild)))
+        # '%channelbound' command. Will return the channel to which the bot is bound in the current server.
+        if message.content.lower() == '%channelbound':
+            channelbound = ll.serverbinding(message.guild)
+            if channelbound != None:
+                await message.channel.send('I am bound to the {0.mention} channel!'.format(ll.serverbinding(message.guild)))
+            else:
+                await message.channel.send('I am not bound to any channel yet!')
 
 
 dailycheck.start()

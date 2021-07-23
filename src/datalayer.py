@@ -1,6 +1,7 @@
 import os
 import csv
-from entry import *
+from entry import Entry
+
 
 """
 CLASS OVERVIEW :
@@ -8,18 +9,18 @@ CLASS OVERVIEW :
         - database (Stores the user IDs with their birthdates)
         - bindtable (Stores the Server/Channel couples)
     Methods:
-        -  [line 28] CONSTRUCTOR(rsspath: str)
-        -  [line 54] getdate(id: int)
-        -  [line 77] getdatebydate(day: int, month: int, year: int)
-        - [line 104] setdate(entry: Entry)
-        - [line 133] save(void)
-        - [line 152] reload(void)
-        - [line 179] userexists(id: int)
-        - [line 199] dateexists(day: int, month: int, year: int)
-        - [line 226] loadbindtable(void)
-        - [line 253] savebindtable(void)
-        - [line 276] getboundchannel(serverid: int)
-        - [line 297] addboundchannel(serverid: int, channelid: int)
+        -  [line 29] CONSTRUCTOR(rsspath: str)
+        -  [line 58] getdate(id: int)
+        -  [line 81] getdatebydate(day: int, month: int, year: int)
+        - [line 109] setdate(entry: Entry)
+        - [line 137] save(void)
+        - [line 156] reload(void)
+        - [line 183] userexists(id: int)
+        - [line 203] dateexists(day: int, month: int, year: int)
+        - [line 230] loadbindtable(void)
+        - [line 257] savebindtable(void)
+        - [line 280] getboundchannel(serverid: int)
+        - [line 301] addboundchannel(serverid: int, channelid: int)
 """
 
 
@@ -52,7 +53,7 @@ class Data:
     # Parameters :
     #   - id: Integer. Must be greater than 0.
     # Returns :
-    #   - An Entry() object if the ID is in the database. None otherwise.
+    #   - An Entry object if the ID is in the database. None otherwise.
     #
     def getdate(self, id):
         if not isinstance(id, int):
@@ -75,9 +76,9 @@ class Data:
     #   - month: Integer. 0 < month < 13
     #   - year: Integer. year > 1900
     # Returns :
-    #   - An Entry() object if the date is in the database. None otherwise.
+    #   - An Entry object if the date is in the database. None otherwise.
     #
-    def getdatebydate(self, day, month, year=2050):
+    def getdatebydate(self, day, month, year=Entry.NOTSPECIFIED):
         if not isinstance(day, int) or not isinstance(month, int) or not isinstance(year, int):
             raise ValueError("All parameters must be integers")
         if day < 1 or day > 31:
@@ -100,7 +101,7 @@ class Data:
     # Creates a new birthday entry into the existing database. Raises a ValueError
     # exception if the parameter doesn't meet the requirements listed below.
     # Parameters :
-    #   - entry: Entry() object. Must contain a valid DD/MM/YYYY date.
+    #   - entry: Entry object. Must contain a valid DD/MM/YYYY date.
     #            ( 0 < DD < 32, 0 < MM < 13, YYYY > 1900 )
     # Returns :
     #   - True if the value was properly saved, False otherwise.

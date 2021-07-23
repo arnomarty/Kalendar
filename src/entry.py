@@ -1,4 +1,14 @@
+"""
+This class will store everything related to dates in general. For now it's limited
+to birthdays, but it might get expanded to dates as a whole in an upcoming release.
+The main attributes are used to store a date (dd/mm/yyyy) and the associated
+Discord user ID.
+"""
+
+
 class Entry:
+
+    NOTSPECIFIED = 6969
 
     def __init__(self, user_id, day, month, year, is_birthday):
         self.id = user_id

@@ -4,7 +4,9 @@ from entry import Entry
 from datetime import datetime
 
 
+# Global object that will handle every memory-related operation.
 databox = dl.Data('../rss')
+
 
 # When the channel and the server ID are valid, this function saves and stores
 # the channel in which the bot is supposed to send the birthday reminders.
@@ -26,9 +28,9 @@ def bindto(channel, server):
 # Returns the channel to which the bot is bound in a specific server (i.e. a
 # channel where the %bind channel has been used at least once)
 # Parameters :
-#   - server: Guild() object. Must point to a valid Discord server.
+#   - server: Guild object. Must point to a valid Discord server.
 # Returns :
-#   - The Channel() object associated, None if it doesn't exist in memory.
+#   - The Channel object associated, None if it doesn't exist in memory.
 #
 def serverbinding(server):
     return server.get_channel(databox.getboundchannel(server.id))
@@ -37,10 +39,10 @@ def serverbinding(server):
 # Will browse the list of registered servers and returns a list of those in which a user
 # is present in. If the parameter does not meet the requirements listed below, does nothing.
 # Parameters :
-#   - user: User() object. Must point to a valid Discord user.
-#   - serverlist: List[Guild()]. The list of servers the bot is present in.
+#   - user: User object. Must point to a valid Discord user.
+#   - serverlist: List[Guild]. The list of servers the bot is present in.
 # Returns :
-#   - List[Guild()] where the user is present. Otherwise, returns [].
+#   - List[Guild] where the user is present. Otherwise, returns [].
 def getuserservers(user, serverlist):
     result = []
     for guild in serverlist:
@@ -80,7 +82,7 @@ def setbirthday(user, day, month, year):
 #   - day: Integer. 0 < day < 32
 #   - month: Integer. 0 < month < 13
 # Returns :
-#   - A User() object if successful, None otherwise.
+#   - A User object if successful, None otherwise.
 #
 def geteventsoftheday(client, day, month):
     if day < 1 or day > 31:
@@ -96,6 +98,12 @@ def geteventsoftheday(client, day, month):
     return None
 
 
+# This contains the message that will be sent to an user when the command
+# %kal help is used. TODO: Use the embed format to make it look nicer.
+# Parameters :
+#   - channel: Discord Channel object. The channel in which we want the message
+#              to be sent in.
+#
 async def helpprompt(channel):
     await channel.send("**Common commands list:** \n \
   - **%kal set {xx/yy} {EU/US}:** \
@@ -107,24 +115,46 @@ Sets xx/yy/zzzz as your birthdate. You also need to specify the time format.\n \
   - **%bind:** To be used in the channel the bot must send birthday reminders to.")
 
 
+# As the prototype implies, this function is used to check the validity of
+# a date passed by the end-user. That is, the correct time format syntax
+# (can be xx/yy, or xx/yy/zzzz). TODO: Differenciate 30/31-days months
+# Parameters :
+#   - date: list(). Stores each part of the date, [xx, yy, zzzz] for the
+#           previous example.
+# Returns :
+#   - True if the format isn't respected, False otherwise.
+#
 def smallbrain(date):
-    if len(date) != 3 and len(date) != 2:
+    if len(date) not in [2, 3]:
         return True
     for i in date:
         if not i.isdigit():
             return True
-    if len(date) != 2 and int(date[2]) > datetime.now().year - 4:
-        return True
+
+    if len(date) != 2:
+        if int(date[2]) > datetime.now().year - 4:
+            return True
     return False
 
 
-
+# Function called when the user uses the '%kal set' command. After checking
+# the syntax validity of the command, will save and store the birth date and
+# its associated user.
+# Parameters :
+#   - message: Discord Message object. Its content must be under the exact
+#              form '%kal set xx/yy(/zzzz) {EU/US}'.
+#              xx, yy and zzzz must be integers and represent a valid date.
+# Returns :
+#   - True if the conditions are respected and the date got saved, False otherwise.
+#
 def handleaddition(message):
     cmd = message.content.lower().split()
     if len(cmd) != 4 or cmd[3] not in ['eu', 'us']:
         return False
+
     separator = '/'
     for c in cmd[2]:
+        # This allows user to use whatever time separator (/ . ' ...)
         if not c.isdigit():
             separator = c
             break
@@ -135,7 +165,7 @@ def handleaddition(message):
         return False
 
     if len(date) == 2:
-        y = 6969
+        y = Entry.NOTSPECIFIED
     else:
         y = date[2]
     if cmd[3] == 'eu':
