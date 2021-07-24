@@ -15,7 +15,7 @@ A simple Discord bot to save and fetch birth dates. When the day comes, the bot 
 - **%bind** : To be used in the channel where you want the bot to send the date reminders. Requires administrator privileges.
 - **%kal set `xx/xx(/xxxx)` `{EU/US}`** : Will save the birthday prompted by the user. The year is optionnal. The format also needs to be specified (EU for DD/MM/YYYY, US for MM/DD/YYYY)
 - **%kal fetch @user** : Displays @user's birthday.
-- ~~**%date set "`{title}`" `{xx/xx/xxxx}` `{EU/US}`** : Saves a date that isn't a birthday. Works like the `/birthday set` command, except that a title is required.~~
+- **%kal help** : Displays the bot manual
 
 ---
 
@@ -27,7 +27,6 @@ A simple Discord bot to save and fetch birth dates. When the day comes, the bot 
 - [X] Design the Input layer
 ###### Unit Tests:
 - [X] Write Data UTs
-- [ ] Write Logic UTs
 ###### Implementation:
 - [X] Implement the Data layer
 - [X] Implement the Logic layer
@@ -36,4 +35,4 @@ A simple Discord bot to save and fetch birth dates. When the day comes, the bot 
 --------
 
 ### Suggestions and Improvements:
-- Grant the possibility to set a date that isn't a birthday
+- ~~Grant the possibility to set a date that isn't a birthday~~

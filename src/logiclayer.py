@@ -6,6 +6,9 @@ from datetime import datetime
 
 # Global object that will handle every memory-related operation.
 databox = dl.Data('../rss')
+months_names = [ 'None', 'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December' ]
+days_per_month = [ -1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 
 # When the channel and the server ID are valid, this function saves and stores
@@ -75,6 +78,22 @@ def setbirthday(user, day, month, year):
     return True
 
 
+# Will look into the database to find the birth date associated to a specific
+# user.
+# Parameters :
+#   - user: Discord User object. Must be associated to a valid discord user.
+# Returns :
+#   - A String object if a date was found. None otherwise
+#
+def getbirthday(user):
+    e = databox.getdate(user.id)
+    if e != None:
+        d, m, y = e.getdate()
+        return months_names[m] + " " + str(d)
+    return None
+
+
+
 # Verifies if there is any birthday set on the date passed in parameters. If the
 # date is invalid, i.e. if it doesn't meet the requirements listed below, does
 # nothing.
@@ -134,6 +153,10 @@ def smallbrain(date):
     if len(date) != 2:
         if int(date[2]) > datetime.now().year - 4:
             return True
+
+    if int(date[0]) > days_per_month[ int(date[1]) ]:
+        return True
+
     return False
 
 

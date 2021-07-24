@@ -47,8 +47,13 @@ async def on_message(message):
         return
 
     # '%kal fetch @user' command. Sends a user's birth date. (TO BE IMPLEMENTED)
-    if message.content.lower().startswith('%kal fetch'):
-        await message.channel.send('no lmao')
+    if message.content.lower().startswith('%kal fetch') and len(message.mentions) == 1:
+        target = message.mentions[0]
+        date = ll.getbirthday(target)
+        if date == None:
+            await message.channel.send('no lmao')
+        else:
+            await message.channel.send('{0.mention}\'s birthday is on {1}!'.format(target, date))
 
     # '%kal help' command. Sends back the commands list.
     if message.content.lower() == '%kal help':
