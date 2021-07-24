@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 # Global object that will handle every memory-related operation.
-databox = dl.Data('../rss')
+databox = dl.Data('rss')
 months_names = [ 'None', 'January', 'February', 'March', 'April', 'May', 'June',
                 'July', 'August', 'September', 'October', 'November', 'December' ]
 days_per_month = [ -1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]

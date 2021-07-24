@@ -27,6 +27,7 @@ CLASS OVERVIEW :
 class Data:
 
     def __init__(self, rsspath):
+        print("INIT: Data Layer")
         self.database = dict()
         self.bindtable = dict()
 
@@ -43,7 +44,7 @@ class Data:
             open(self.tablepath, 'x')
         self.reload()
         self.loadbindtable()
-        print(self.bindtable)
+        print('Finished! {0} entries, {1} channel bound\n'.format(len(self.database), len(self.bindtable)))
 
 
 

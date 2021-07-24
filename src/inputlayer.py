@@ -34,9 +34,10 @@ async def dailycheck():
 
 @client.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
+    print('Bot logged as: {0.user}'.format(client))
     for guild in client.guilds:
-        print(' - Connected to {0.name}'.format(guild))
+        print('  - Connected to {0.name}'.format(guild))
+    print('\n')
 
 
 @client.event
