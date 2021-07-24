@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 import logiclayer as ll
 import datetime as dt
 import os
-import schedule
-import threading
+#import schedule
+#import threading
 
 
 load_dotenv()
