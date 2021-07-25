@@ -131,7 +131,8 @@ Sets xx/yy as your birthdate. You need to specify the time format.\n \
 Sets xx/yy/zzzz as your birthdate. You also need to specify the time format.\n \
   - **%kal fetch @user:** Fetches an user's birthday.\n\n \
 **Admin commands list:** \n \
-  - **%bind:** To be used in the channel the bot must send birthday reminders to.")
+  - **%bind:** To be used in the channel the bot must send birthday reminders to.\n\n \
+**Available time formats:**\n  - EU (DD/MM/YYYY)\n  - US (MM/DD/YYYY)")
 
 
 # As the prototype implies, this function is used to check the validity of
@@ -184,16 +185,19 @@ def handleaddition(message):
 
     date = cmd[2].split(separator)
 
-    if smallbrain(date):
-        return False
+#    if smallbrain(date):
+#        return False
 
     if len(date) == 2:
-        y = Entry.NOTSPECIFIED
+        y = str(Entry.NOTSPECIFIED)
     else:
         y = date[2]
     if cmd[3] == 'eu':
-        d, m = int(date[0]), int(date[1])
+        d, m = date[0], date[1]
     else:
-        d, m = int(date[1]), int(date[0])
+        d, m = date[1], date[0]
 
-    return setbirthday(message.author, d, m, y)
+    if smallbrain([d, m, y]):
+        return False
+
+    return setbirthday(message.author, int(d), int(m), int(y))

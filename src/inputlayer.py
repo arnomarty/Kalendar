@@ -65,7 +65,7 @@ async def on_message(message):
         if ll.handleaddition(message):
             await message.channel.send('{0.mention} Birthdate successfully registered!'.format(message.author))
         else:
-            await message.channel.send('Wrong command syntax! Type %help or mention the bot for more informations')
+            await message.channel.send('Wrong command syntax! Type %kal help or mention the bot for more informations')
 
     # Action to perform when the bot is mentionned.
     if len(message.mentions) == 1 and message.mentions[0] == client.user:
